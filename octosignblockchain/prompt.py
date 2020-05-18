@@ -1,22 +1,53 @@
-from tkinter.ttk import *
-from tkinter import Tk, StringVar  
+from tkinter.ttk import Style
+from tkinter import *
 
 class prompt():
+    """Graphical prompt to retrieve info from the user"""
+
     def __init__(self):
         self.root = Tk()
+        self.name = StringVar()
         self.address = StringVar()
         self.key = StringVar()
+        self.confirmed = False
+        self.error_label = None
 
         s = Style().theme_use('vista')
 
     def confirm(self):
-        print(self.address.get())
-        print(self.key.get())
-        self.root.quit()
+        """Confirms prompt if all fields are filled"""
+        if len(self.name.get()) == 0 or len(self.address.get()) == 0 or len(self.key.get()) == 0:
+            self.error_label.pack()
+        else:
+            self.confirmed = True
+            self.root.quit()
+
+    def get_data(self):
+        """Get filled in data
+
+        Returns dictionary if filled, otherwise None.
+        """
+
+        if self.confirmed == False:
+            return None
+
+        return {
+            'name': self.name.get(),
+            'address': self.address.get(),
+            'key': self.key.get(),
+        }
 
     def show(self):
-        self.root.geometry('512x128')
+        """Show the prompt"""
+
+        self.root.geometry('512x172')
         self.root.title('Details prompt')
+
+        nameLabel = Label(self.root, text='Your name')
+        nameLabel.pack()
+
+        nameEntry = Entry(self.root, textvariable=self.name, width=30)
+        nameEntry.pack()
 
         addressLabel = Label(self.root, text='Your Address')
         addressLabel.pack()
@@ -32,5 +63,8 @@ class prompt():
 
         confirmButton = Button(self.root, text='Confirm', command=self.confirm)
         confirmButton.pack()
+
+        self.error_label = Label(self.root, text='You need to fill all fields', fg='red')
+        self.error_label.pack_forget()
 
         self.root.mainloop()

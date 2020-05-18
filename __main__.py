@@ -1,8 +1,9 @@
 import argparse
+import sys
 
-from octosignblockchain.meta import meta
-from octosignblockchain.sign import sign
-from octosignblockchain.verify import verify
+from octosignblockchain.operations.meta import meta
+from octosignblockchain.operations.sign import sign
+from octosignblockchain.operations.verify import verify
 
 class BlockchainBackend(object):
     def main(self):
@@ -33,4 +34,6 @@ class BlockchainBackend(object):
         verify(args.file)
 
 if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        raise ValueError('Missing required operation as first argument')
     BlockchainBackend().main()

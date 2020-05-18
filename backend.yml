@@ -1,0 +1,7 @@
+name: Ethereum Blockchain
+description: Signs PDFs using Ethereum blockchain.
+repository: https://github.com/durasj/octosign-blockchain
+version: 0.1.0
+author: Jakub Ďuraš <jakub@duras.me>
+license: MIT License
+exec: "./venv/Scripts/python ./"
