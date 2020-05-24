@@ -3,7 +3,7 @@ import base64
 from datetime import datetime
 import web3
 
-class signature(object):
+class Signature(object):
     """Custom data structure of signature that is placed in the PDF document.
 
     It is represented by name of the signee, file digest, and transaction hash.
@@ -19,7 +19,7 @@ class signature(object):
         self.address = None
 
     def __eq__(self, other):
-        if not(isinstance(other, signature)):
+        if not(isinstance(other, Signature)):
             return False
         return self.hash == other.hash
 
@@ -50,7 +50,7 @@ class signature(object):
 
         block = w3.eth.getBlock(tx.blockHash)
 
-        new_signature = signature(name, stored_hash, transaction)
+        new_signature = Signature(name, stored_hash, transaction)
         new_signature.date = datetime.fromtimestamp(block.timestamp)
         new_signature.address = tx['from']
 

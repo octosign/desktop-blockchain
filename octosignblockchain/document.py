@@ -8,9 +8,9 @@ from PyPDF2 import PdfFileReader, PdfFileMerger
 from web3 import Web3
 
 from .config import NETWORK_URL, MAIN_ADDRESS
-from .signature import signature
+from .signature import Signature
 
-class document(object):
+class Document(object):
     """Abstraction around working with the document
 
     Provides adding signature and verifying of the current signature
@@ -19,7 +19,7 @@ class document(object):
     def __init__(self, file: str):
         self.file = file
         # Open and save the PDF as temp file using PyPDF2 as it will influence the content
-        self.output = self.set_pdf_signature(file)
+        self.output = self._set_pdf_signature(file)
         self.w3 = Web3(Web3.WebsocketProvider(NETWORK_URL))
 
     def add(self, name: str, address: str, key: str):
@@ -30,7 +30,7 @@ class document(object):
         - Argument key: Private key of the sender.
         """
 
-        file_hash = self.get_hash(name)
+        file_hash = self._get_hash(name)
 
         # Create transaction on the blockchain with sha3-256 hash as data
         signed_txn = self.w3.eth.account.signTransaction({
@@ -45,10 +45,10 @@ class document(object):
         transaction_hash = self.w3.eth.sendRawTransaction(signed_txn.rawTransaction)
         self.w3.eth.waitForTransactionReceipt(transaction_hash)
 
-        new_signature = signature(name, file_hash, transaction_hash.hex())
+        new_signature = Signature(name, file_hash, transaction_hash.hex())
 
         oldOutput = self.output
-        self.output = self.set_pdf_signature(self.output, signature=new_signature)
+        self.output = self._set_pdf_signature(self.output, signature=new_signature)
         remove(oldOutput)
 
     def save(self, path: str):
@@ -72,13 +72,13 @@ class document(object):
 
         serialized_signature = metadata['/Signature']
 
-        stored_signature = signature.from_serialized(serialized_signature, self.w3)
+        stored_signature = Signature.from_serialized(serialized_signature, self.w3)
         if stored_signature == None:
             return False
 
-        calculated_signature = signature(
+        calculated_signature = Signature(
             stored_signature.name,
-            self.get_hash(stored_signature.name),
+            self._get_hash(stored_signature.name),
             stored_signature.transaction,
         )
 
@@ -94,7 +94,7 @@ class document(object):
         else:
             return False
 
-    def get_hash(self, name: str):
+    def _get_hash(self, name: str):
         """Get hash of the current file
 
         - Argument name: Name of the person signing the document.
@@ -111,7 +111,7 @@ class document(object):
 
         return file_hash.hexdigest()
 
-    def set_pdf_signature(self, input: str, output: str = None, signature: signature = None) -> str:
+    def _set_pdf_signature(self, input: str, output: str = None, signature: Signature = None) -> str:
         """Sets signature metadata using the given input file to new output file
 
         Private method that should not be used directly, use add instead.

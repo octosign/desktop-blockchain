@@ -1,7 +1,7 @@
 from tkinter.ttk import Style
 from tkinter import *
 
-class prompt():
+class Prompt():
     """Graphical prompt to retrieve info from the user"""
 
     def __init__(self):
@@ -20,7 +20,7 @@ class prompt():
             self.error_label.pack()
         else:
             self.confirmed = True
-            self.root.quit()
+            self.root.destroy()
 
     def get_data(self):
         """Get filled in data
