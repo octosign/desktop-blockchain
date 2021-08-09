@@ -26,7 +26,7 @@ pycryptodome==3.9.7
 PyPDF2==1.26.0
 pypiwin32==223
 pyrsistent==0.15.7
-pywin32==227
+pywin32==301
 requests==2.23.0
 rlp==1.2.0
 six==1.14.0
