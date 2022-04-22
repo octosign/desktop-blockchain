@@ -23,7 +23,7 @@ netaddr==0.7.19
 parsimonious==0.8.1
 protobuf==3.11.3
 pycryptodome==3.9.7
-PyPDF2==1.26.0
+PyPDF2==1.27.5
 pypiwin32==223
 pyrsistent==0.15.7
 pywin32==227
